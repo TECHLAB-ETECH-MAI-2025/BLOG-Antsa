@@ -33,11 +33,11 @@
 						'required' => true
 					]
 				])
-				->add('categories', EntityType::class, [
+				->add('category', EntityType::class, [
 					'class' => Category::class,
 					'choice_label' => 'title',
-					'multiple' => true,
-					'expanded' => true,
+					'multiple' => false,
+					'expanded' => false,
 					'label' => 'Catégories',
 					'attr' => [
 						'class' => 'form-check',
@@ -45,7 +45,7 @@
 					'label_attr' => [
 						'class' => 'form-check-label'
 					]
-				]);
+				]); 
 		}
 
 		public function configureOptions(OptionsResolver $resolver): void

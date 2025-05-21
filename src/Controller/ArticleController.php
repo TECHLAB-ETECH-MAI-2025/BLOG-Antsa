@@ -35,7 +35,8 @@ final class ArticleController extends AbstractController
             $entityManager->persist($article);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Article créé avec succès');
+		    return $this->redirectToRoute('app_article_index');
         }
 
         return $this->render('article/new.html.twig', [
@@ -47,26 +48,20 @@ final class ArticleController extends AbstractController
     #[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
     public function show(Article $article, Request $request, EntityManagerInterface $entityManager): Response
 		{
-			// Création d'un nouveau commentaire
 			$comment = new Comment();
 			$comment->setArticle($article);
 
-			// Création du formulaire
 			$form = $this->createForm(CommentForm::class, $comment);
 			$form->handleRequest($request);
 
-			// Traitement du formulaire
 			if ($form->isSubmitted() && $form->isValid()) {
 				$comment->setCreatedAt(new \DateTimeImmutable());
 
-				// Enregistrement du commentaire
 				$entityManager->persist($comment);
 				$entityManager->flush();
 
-				// Message de succès
 				$this->addFlash('success', 'Votre commentaire a été publié avec succès !');
 
-				// Redirection pour éviter le rechargement du formulaire
 				return $this->redirectToRoute(
 					'app_article_show',
 					['id' => $article->getId()],
@@ -74,7 +69,6 @@ final class ArticleController extends AbstractController
 				);
 			}
 
-			// Affichage de la vue
 			return $this->render('article/show.html.twig', [
 				'article' => $article,
 				'commentForm' => $form->createView(),
@@ -90,7 +84,8 @@ final class ArticleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Article modifié avec succès');
+		    return $this->redirectToRoute('app_article_index');
         }
 
         return $this->render('article/edit.html.twig', [

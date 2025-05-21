@@ -13,13 +13,13 @@
 
 
 						{# Affichage des catégories #}
-						{% if article.categories|length > 0 %}
+						{% if article.category|length > 0 %}
 
 
 									Catégories :
 
 
-									{% for category in article.categories %}
+									{% for category in article.category %}
 
 											{{ category.title }}
 

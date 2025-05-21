@@ -1,34 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Comment{% endblock %}
+{% block title %}Comment Details{% endblock %}
 
 {% block body %}
-    <h1>Comment</h1>
+    <h1>Comment Details</h1>
 
-    <table class="table">
+    <table class="table table-striped table-bordered">
         <tbody>
             <tr>
-                <th>Id</th>
+                <th scope="row">Id</th>
                 <td>{{ comment.id }}</td>
             </tr>
             <tr>
-                <th>Author</th>
+                <th scope="row">Author</th>
                 <td>{{ comment.author }}</td>
             </tr>
             <tr>
-                <th>Content</th>
+                <th scope="row">Content</th>
                 <td>{{ comment.content }}</td>
             </tr>
             <tr>
-                <th>CreatedAt</th>
-                <td>{{ comment.createdAt ? comment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <th scope="row">Created At</th>
+                <td>{{ comment.createdAt ? comment.createdAt|date('Y-m-d H:i:s') : 'N/A' }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_comment_index') }}">back to list</a>
+    <div class="d-flex gap-2">
+        <a href="{{ path('app_comment_index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to list
+        </a>
 
-    <a href="{{ path('app_comment_edit', {'id': comment.id}) }}">edit</a>
+        {{include('comment/edit.html.twig')}}
 
-    {{ include('comment/_delete_form.html.twig') }}
+        {{ include('comment/_delete_form.html.twig') }}
+    </div>
 {% endblock %}
