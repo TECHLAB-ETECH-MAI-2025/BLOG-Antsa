@@ -3,7 +3,7 @@
 {% block title %}Category index{% endblock %}
 
 {% block body %}
-    <h1>Category index</h1>
+    <h1>Liste des catégoties</h1>
 
     <table class="table table-striped">
         <thead>
@@ -36,4 +36,9 @@
     </table>
 
     <a href="{{ path('app_category_new') }}" class="btn btn-success mt-3">Create new</a>
+    
+    <div class="d-flex justify-content-center mt-4">
+    {{ knp_pagination_render(categories) }}
+    </div>
+
 {% endblock %}
