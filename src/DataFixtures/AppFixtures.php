@@ -18,7 +18,7 @@ class AppFixtures extends Fixture
         $categories = [];
         for ($i = 0; $i < 5; $i++) {
             $category = new Category();
-            $category->setName($faker->word);
+            $category->setTitle($faker->word);
             $category->setDescription($faker->text(100));
             $manager->persist($category);
             $categories[] = $category;
@@ -29,8 +29,8 @@ class AppFixtures extends Fixture
             $article = new Article();
             $article->setTitle($faker->text(100));
             $article->setContent($faker->paragraph(5));
-            $article->setCreatedAt(new \DateTimeImmutable());
-            $article->setUpdatedAt(null);
+            $article->setCreatedAt(new \DateTime());
+            $article->setUpdatedAt(new \DateTime());
 
             $article->setCategory($categories[array_rand($categories)]);
 

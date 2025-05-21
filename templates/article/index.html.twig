@@ -1,39 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Article index{% endblock %}
+{% block title %}Liste des articles{% endblock %}
 
 {% block body %}
-    <h1>Article index</h1>
+    <div class="container mt-4">
+        <h1 class="mb-4">📄 Liste des articles</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Content</th>
-                <th>CreatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for article in articles %}
-            <tr>
-                <td>{{ article.id }}</td>
-                <td>{{ article.title }}</td>
-                <td>{{ article.content }}</td>
-                <td>{{ article.createdAt ? article.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_article_show', {'id': article.id}) }}">show</a>
-                    <a href="{{ path('app_article_edit', {'id': article.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Titre</th>
+                        <th>Contenu</th>
+                        <th>Créé le</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for article in articles %}
+                    <tr>
+                        <td>{{ article.id }}</td>
+                        <td>{{ article.title }}</td>
+                        <td>{{ article.content|length > 80 ? article.content|slice(0, 80) ~ '…' : article.content }}</td>
+                        <td>
+                            {{ article.createdAt ? article.createdAt|date('d/m/Y H:i') : 'N/A' }}
+                        </td>
+                        <td>
+                            <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-sm btn-outline-primary">
+                                Voir
+                            </a>
+                            <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-sm btn-outline-secondary">
+                                Modifier
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">Aucun article trouvé.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-    <a href="{{ path('app_article_new') }}">Create new</a>
+        <div class="mt-4 text-end">
+            <a href="{{ path('app_article_new') }}" class="btn btn-success">
+                ➕ Créer un nouvel article
+            </a>
+        </div>
+    </div>
 {% endblock %}
