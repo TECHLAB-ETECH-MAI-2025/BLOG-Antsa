@@ -12,17 +12,26 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/article')]
 final class ArticleController extends AbstractController
 {
     #[Route(name: 'app_article_index', methods: ['GET'])]
-    public function index(ArticleRepository $articleRepository): Response
-    {
-        return $this->render('article/index.html.twig', [
-            'articles' => $articleRepository->findAll(),
-        ]);
-    }
+    public function index(Request $request, ArticleRepository $articleRepository, PaginatorInterface $paginator): Response
+{
+    $page = $request->query->getInt('page', 1);
+
+    $articles = $paginator->paginate(
+        $articleRepository->createQueryBuilder('a'),
+        $page,
+        2
+    );
+
+    return $this->render('article/index.html.twig', [
+        'articles' => $articles,
+    ]);
+}
 
     #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response

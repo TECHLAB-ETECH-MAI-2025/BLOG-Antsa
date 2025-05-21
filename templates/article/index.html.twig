@@ -43,6 +43,10 @@
                 </tbody>
             </table>
         </div>
+        
+        <div class="d-flex justify-content-center mt-3">
+            {{ knp_pagination_render(articles) }}
+        </div>
 
         <div class="mt-4 text-end">
             <a href="{{ path('app_article_new') }}" class="btn btn-success">
