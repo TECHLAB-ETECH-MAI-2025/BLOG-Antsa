@@ -1,34 +1,125 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Article{% endblock %}
+				{% block title %}{{ article.title }}{% endblock %}
 
-{% block body %}
-    <h1>Article</h1>
+				{% block body %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ article.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ article.title }}</td>
-            </tr>
-            <tr>
-                <th>Content</th>
-                <td>{{ article.content }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ article.createdAt ? article.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+						{# Affichage de l'article #}
 
-    <a href="{{ path('app_article_index') }}">back to list</a>
+							{{ article.title }}
 
-    <a href="{{ path('app_article_edit', {'id': article.id}) }}">edit</a>
+								{{ article.content|nl2br }}
 
-    {{ include('article/_delete_form.html.twig') }}
-{% endblock %}
+
+
+						{# Affichage des catégories #}
+						{% if article.categories|length > 0 %}
+
+
+									Catégories :
+
+
+									{% for category in article.categories %}
+
+											{{ category.title }}
+
+									{% endfor %}
+
+
+						{% endif %}
+
+
+
+						{# Section des commentaires #}
+
+
+
+								Commentaires ({{ article.comments|length }})
+
+
+							{% if article.comments|length > 0 %}
+
+									{% for comment in article.comments %}
+
+
+
+													{{ comment.author }}
+
+
+
+													{{ comment.createdAt|date('d/m/Y H:i') }}
+
+
+											{{ comment.content }}
+
+									{% endfor %}
+
+							{% else %}
+
+									Aucun commentaire pour le moment. Soyez le premier à réagir !
+
+							{% endif %}
+
+
+						{# Formulaire d'ajout de commentaire #}
+
+
+
+									Laisser un commentaire
+
+
+								{{ form_start(commentForm, {'attr': {'class': 'needs-validation', 'novalidate':
+	'novalidate'}})
+		}}
+
+										{{ form_label(commentForm.author, 'Votre nom', {'label_attr': {'class':
+	'form-label'}})
+		}}
+										{{ form_widget(commentForm.author, {'attr': {
+											'class': 'form-control',
+											'placeholder': 'Votre nom',
+											'required': 'required'
+										}}) }}
+
+											Veuillez saisir votre nom.
+
+
+
+
+										{{ form_label(commentForm.content, 'Votre commentaire', {'label_attr': {'class':
+			'form-label'}}) }}
+										{{ form_widget(commentForm.content, {'attr': {
+											'class': 'form-control',
+											'rows': 4,
+											'placeholder': 'Votre commentaire...',
+											'required': 'required'
+										}}) }}
+
+											Veuillez saisir un commentaire.
+
+
+
+
+
+											 Publier le commentaire
+
+
+								{{ form_end(commentForm) }}
+
+
+
+				{% endblock %}
+
+				{% block stylesheets %}
+					{{ parent() }}
+
+						.article-content {
+							line-height: 1.8;
+							font-size: 1.05em;
+						}
+						.comment-form {
+							max-width: 800px;
+							margin: 0 auto;
+						}
+
+				{% endblock %}
