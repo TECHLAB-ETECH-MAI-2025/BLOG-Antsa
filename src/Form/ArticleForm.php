@@ -19,14 +19,9 @@ class ArticleForm extends AbstractType
             ->add('createdAt')
             ->add('categories', EntityType::class, [
                 'class' => Category::class,
-                'choice_label' => 'id',
+                'choice_label' => 'title',
                 'multiple' => true,
-            ])
-            ->add('article', EntityType::class, [
-                'class' => Article::class,
-                'choice_label' => 'id',
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
