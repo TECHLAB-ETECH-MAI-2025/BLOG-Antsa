@@ -10,19 +10,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/comment')]
 final class CommentController extends AbstractController
 {
     #[Route(name: 'app_comment_index', methods: ['GET'])]
-    public function index(CommentRepository $commentRepository): Response
-    {
-        $comments = $commentRepository->findAll();
+    public function index(CommentRepository $commentRepository, PaginatorInterface $paginator, Request $request): Response
+{
+    $pagination = $paginator->paginate(
+        $commentRepository->findAll(),        
+        $request->query->getInt('page', 1),   
+        2                                  
+    );
 
-        return $this->render('comment/index.html.twig', [
-            'comments' => $comments,
-        ]);
-    }
+    return $this->render('comment/index.html.twig', [
+        'comments' => $pagination,
+    ]);
+}
 
     #[Route('/new', name: 'app_comment_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response

@@ -29,7 +29,7 @@
         {% if article.comments|length > 0 %}
             <ul class="list-group mb-3">
                 {% for comment in article.comments %}
-                    < $this->categories = new ArrayCollection();li class="list-group-item">
+                    <li class="list-group-item">
                         <strong>{{ comment.author }}:</strong><br>
                         {{ comment.content|nl2br }}
                         <div class="text-muted small">{{ comment.createdAt|date('d/m/Y H:i') }}</div>

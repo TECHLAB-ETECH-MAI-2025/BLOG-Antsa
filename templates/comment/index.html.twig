@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="container mt-4">
-    <h1 class="mb-4">Liste des commentaires</h1>
+    <h1 class="mb-4">Listes de commentaires</h1>
 
     <table class="table table-striped table-hover align-middle">
         <thead class="table-dark">
@@ -39,6 +39,10 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <div class="d-flex justify-content-center mt-4">
+    {{ knp_pagination_render(comments) }}
+    </div>
 
 </div>
 {% endblock %}
