@@ -3,9 +3,31 @@
 {% block title %}New Article{% endblock %}
 
 {% block body %}
-    <h1>Create new Article</h1>
+    <h2>Create new article </h2>
+    {#
+    <div class="mb-3">
+    <label class="form-label">Catégories</label>
+    <div class="d-flex flex-wrap gap-3">
+        {% for categoryField in form.categories %}
+            <div class="form-check">
+                {{ form_widget(categoryField, { attr: { class: 'form-check-input' } }) }}
+                {{ form_label(categoryField, null, { label_attr: { class: 'form-check-label' } }) }}
+            </div>
+        {% endfor %}
+    </div>
+    {{ form_errors(form.categories) }}
+</div> #}
+{{ include('article/_form.html.twig', { button_label: 'Save' }) }}
 
-    {{ include('article/_form.html.twig') }}
 
-    <a href="{{ path('app_article_index') }}">back to list</a>
+<div class="d-flex gap-2 mt-3">
+    <button type="submit" form="form_id" class="btn btn-success">
+        <i class="fas fa-save"></i> Save
+    </button>
+
+    <a href="{{ path('app_article_index') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to list
+    </a>
+</div>
+
 {% endblock %}
