@@ -77,7 +77,7 @@ class Comment
         return $this->article;
     }
 
-    public function setArticle(?Article $article): static
+    public function setArticle(?Article $article): self
     {
         $this->article = $article;
 

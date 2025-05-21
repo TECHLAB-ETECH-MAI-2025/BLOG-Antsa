@@ -8,20 +8,19 @@
     {# --- Titre de l'article --- #}
     <h1 class="mb-3">{{ article.title }}</h1>
 
-    {# --- Contenu de l'article (avec retour à la ligne HTML) --- #}
     <p class="article-content">{{ article.content|nl2br }}</p>
 
-    {# --- Affichage des catégories liées à l'article --- #}
     {% if article.category|length > 0 %}
-        <div class="mb-4">
-            <strong>Catégories :</strong>
-            <ul class="list-inline mt-2">
-                {% for category in article.category %}
-                    <li class="list-inline-item badge bg-info text-dark">{{ category.title }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+    <div class="mb-4">
+        <strong>Catégories :</strong>
+        <ul class="list-inline mt-2">
+            {% for category in article.category %}
+                <li class="list-inline-item badge bg-info text-dark">{{ category.title }}</li>
+            {% endfor %}
+        </ul>
+    </div>
     {% endif %}
+
 
     {# --- Section des commentaires --- #}
     <div class="mb-5">
@@ -30,7 +29,7 @@
         {% if article.comments|length > 0 %}
             <ul class="list-group mb-3">
                 {% for comment in article.comments %}
-                    <li class="list-group-item">
+                    < $this->categories = new ArrayCollection();li class="list-group-item">
                         <strong>{{ comment.author }}:</strong><br>
                         {{ comment.content|nl2br }}
                         <div class="text-muted small">{{ comment.createdAt|date('d/m/Y H:i') }}</div>
@@ -68,7 +67,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">
-            <i class="fas fa-paper-plane"></i> Publier le commentaire
+            <i class="fas fa-paper-plane"></i> Commenter
         </button>
 
         {{ form_end(commentForm) }}

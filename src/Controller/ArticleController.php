@@ -45,7 +45,7 @@ final class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_article_show', methods: ['GET', 'POST'])]
     public function show(Article $article, Request $request, EntityManagerInterface $entityManager): Response
 		{
 			$comment = new Comment();
