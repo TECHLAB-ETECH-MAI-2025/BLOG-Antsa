@@ -25,9 +25,9 @@ class Article
     #[ORM\Column]
     private ?\DateTime $createdAt = null;
 
-    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'articles')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Category $category = null;
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'articles')]
+    #[ORM\JoinTable(name: 'article_category')]
+    private Collection $categories;
 
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
@@ -36,6 +36,7 @@ class Article
     {
         $this->comments = new ArrayCollection();
         $this->createdAt = new \DateTime();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -76,17 +77,52 @@ class Article
         return $this;
     }
 
-    public function getCategory(): ?Category
-    {
-        return $this->category;
-    }
+    // /**
+    //  * @return Collection<int, Category>
+    //  */
 
-    public function setCategory(?Category $category): static
+    // public function getCategories(): Collection
+    // {
+    //     return $this->categories;
+    // }
+    // public function addCategory(Category $category): static
+    // {
+    //     if (!$this->categories->contains($category)) {
+    //         $this->categories->add($category);
+    //     }
+ 
+    //     return $this;
+    // }
+ 
+    // public function removeCategory(Category $category): static
+    // {
+    //     $this->categories->removeElement($category);
+ 
+    //     return $this;
+    // }
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
     {
-        $this->category = $category;
+        return $this->categories;
+    }
+ 
+    public function addCategory(Category $category): static
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+ 
         return $this;
     }
-
+ 
+    public function removeCategory(Category $category): static
+    {
+        $this->categories->removeElement($category);
+ 
+        return $this;
+    }
     /**
      * @return Collection<int, Comment>
      */

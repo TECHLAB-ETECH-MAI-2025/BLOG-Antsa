@@ -10,11 +10,11 @@
 
     <p class="article-content">{{ article.content|nl2br }}</p>
 
-    {% if article.category|length > 0 %}
+    {% if article.categories|length > 0 %}
     <div class="mb-4">
         <strong>Catégories :</strong>
         <ul class="list-inline mt-2">
-            {% for category in article.category %}
+            {% for category in article.categories %}
                 <li class="list-inline-item badge bg-info text-dark">{{ category.title }}</li>
             {% endfor %}
         </ul>

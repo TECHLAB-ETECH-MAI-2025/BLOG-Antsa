@@ -33,11 +33,11 @@
 						'required' => true
 					]
 				])
-				->add('category', EntityType::class, [
+				->add('categories', EntityType::class, [
 					'class' => Category::class,
 					'choice_label' => 'title',
-					'multiple' => false,
-					'expanded' => false,
+					'multiple' => true,
+					'expanded' => true,
 					'label' => 'Catégories',
 					'attr' => [
 						'class' => 'form-check',
