@@ -21,7 +21,7 @@ final class CommentController extends AbstractController
     $pagination = $paginator->paginate(
         $commentRepository->findAll(),        
         $request->query->getInt('page', 1),   
-        2                                  
+        7                                
     );
 
     return $this->render('comment/index.html.twig', [

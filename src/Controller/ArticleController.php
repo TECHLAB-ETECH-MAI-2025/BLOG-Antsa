@@ -25,7 +25,7 @@ final class ArticleController extends AbstractController
     $articles = $paginator->paginate(
         $articleRepository->createQueryBuilder('a'),
         $page,
-        2
+        7
     );
 
     return $this->render('article/index.html.twig', [
