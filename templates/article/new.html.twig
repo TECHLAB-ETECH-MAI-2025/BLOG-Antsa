@@ -3,26 +3,13 @@
 {% block title %}New Article{% endblock %}
 
 {% block body %}
-    <h2>Create new article </h2>
-    {#
-    <div class="mb-3">
-    <label class="form-label">Catégories</label>
-    <div class="d-flex flex-wrap gap-3">
-        {% for categoryField in form.categories %}
-            <div class="form-check">
-                {{ form_widget(categoryField, { attr: { class: 'form-check-input' } }) }}
-                {{ form_label(categoryField, null, { label_attr: { class: 'form-check-label' } }) }}
-            </div>
-        {% endfor %}
-    </div>
-    {{ form_errors(form.categories) }}
-</div> #}
+    <h2>Ajouter un nouveau article </h2>
 {{ include('article/_form.html.twig', { button_label: 'Save' }) }}
 
 
 <div class="d-flex gap-2 mt-3">
     <a href="{{ path('app_article_index') }}" class="btn btn-secondary mt-3">
-        <i class="fas fa-arrow-left"></i> Back to list
+        <i class="fas fa-arrow-left"></i> Retour
     </a>
 </div>
 
