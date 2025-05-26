@@ -29,7 +29,7 @@ final class ArticleController extends AbstractController
     $articles = $paginator->paginate(
         $queryBuilder,
         $page,
-        7
+        9
     );
 
     return $this->render('article/index.html.twig', [
@@ -118,4 +118,5 @@ final class ArticleController extends AbstractController
 
         return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
     }
+    
 }

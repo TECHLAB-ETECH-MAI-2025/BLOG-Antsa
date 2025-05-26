@@ -3,68 +3,76 @@
 {% block title %}Liste des articles{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <h1 class="mb-4"> Liste des articles</h1>
+<div class="container mt-4">
+    <h1 class="mb-4">Liste des articles</h1>
 
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Titre</th>
-                        <th>Contenu</th>
-                        <th>Catégorie</th>
-                        <th>Créé le</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for article in articles %}
-                        <tr>
-                            <td>{{ article.id }}</td>
-                            <td>{{ article.title }}</td>
-                            <td>
-                                {{ article.content|length > 80 ? article.content|slice(0, 80) ~ '…' : article.content }}
-                            </td>
-                            <td>
-                                {% if article.categories is not empty %}
-                                    {% for category in article.categories %}
-                                        {{ category.title }}{% if not loop.last %}, {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                                    <em>Aucune catégorie</em>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {{ article.createdAt ? article.createdAt|date('d/m/Y H:i') : 'N/A' }}
-                            </td>
-                            <td>
-                                <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-sm btn-outline-primary">
-                                    Voir
-                                </a>
-                                <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-sm btn-outline-secondary">
-                                    Modifier
-                                </a>
-                                {% include 'article/_delete_form.html.twig' with {'article': article} %}
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="6" class="text-center text-muted">Aucun article trouvé.</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        
-        <div class="d-flex justify-content-center mt-3">
-            {{ knp_pagination_render(articles) }}
-        </div>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for article in articles %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ article.title }}</h5>
+                        <p class="card-text text-muted small">
+                            {{ article.createdAt ? article.createdAt|date('d/m/Y H:i') : 'N/A' }}
+                        </p>
+                        <p class="card-text">
+                            {{ article.content|length > 120 ? article.content|slice(0, 120) ~ '…' : article.content }}
+                        </p>
+                        <p class="mt-auto">
+                            {% if article.categories is not empty %}
+                                <span class="badge bg-secondary">
+                                    {{ article.categories|map(c => c.title)|join(', ') }}
+                                </span>
+                            {% else %}
+                                <span class="text-muted">Aucune catégorie</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+                        <button class="btn btn-outline-danger btn-sm like-btn" data-id="{{ article.id }}">
+                        <i class="bi bi-heart-fill"></i> 
+                        <span class="like-count">{{ article.likes|length }}</span>
+                        </button>
 
-        <div class="mt-4 text-end">
-            <a href="{{ path('app_article_new') }}" class="btn btn-outline-info">
-                Ajouter
-            </a>
-        </div>
+                        <a href="{{ path('app_article_show', {'id': article.id}) }}#commentaires" 
+                        class="btn btn-outline-success btn-sm">
+                        <i class="bi bi-chat-left-text"></i> {{ article.comments|length }}
+                        </a>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton{{ article.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton{{ article.id }}">
+                        <li>
+                            <a class="dropdown-item" href="{{ path('app_article_show', {'id': article.id}) }}">
+                            <i class="bi bi-eye"></i> Voir
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ path('app_article_edit', {'id': article.id}) }}">
+                            <i class="bi bi-pencil"></i> Modifier
+                            </a>
+                        </li>
+                        <li>
+                            {{ include('article/_delete_form.html.twig', {'article': article}) }}
+                        </li>
+                        </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12 text-center text-muted">Aucun article trouvé.</div>
+        {% endfor %}
     </div>
+
+    <div class="d-flex justify-content-center mt-4">
+        {{ knp_pagination_render(articles) }}
+    </div>
+
+    <div class="mt-4 text-end">
+        <a href="{{ path('app_article_new') }}" class="btn btn-outline-info">Ajouter un article</a>
+    </div>
+</div>
 {% endblock %}

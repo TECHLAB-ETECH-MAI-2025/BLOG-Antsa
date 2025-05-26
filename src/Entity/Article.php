@@ -182,4 +182,8 @@ class Article
 
         return $this;
     }
+
+    public function getLikesCount(): int{
+        return $this -> likes -> count();
+    }
 }

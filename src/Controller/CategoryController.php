@@ -22,7 +22,7 @@ final class CategoryController extends AbstractController
 
     $queryBuilder = $categoryRepository->createQueryBuilder('c')
         ->where('c.deletedAt IS NULL')
-        ->orderBy('c.name', 'ASC');
+        ->orderBy('c.title', 'ASC');
 
     $categories = $paginator->paginate(
         $queryBuilder,
