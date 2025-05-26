@@ -24,6 +24,8 @@ class Article
 
     #[ORM\Column]
     private ?\DateTime $createdAt = null;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $deletedAt = null;
 
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'articles')]
     #[ORM\JoinTable(name: 'article_category')]
@@ -76,6 +78,24 @@ class Article
         $this->createdAt = $createdAt;
         return $this;
     }
+
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+    return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    {
+    $this->deletedAt = $deletedAt;
+    return $this;
+    }
+
+    public function isDeleted(): bool
+    {
+    return $this->deletedAt !== null;
+    }
+
+    
     /**
      * @return Collection<int, Category>
      */

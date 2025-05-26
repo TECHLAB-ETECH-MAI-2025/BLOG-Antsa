@@ -18,14 +18,20 @@ final class CategoryController extends AbstractController
     #[Route(name: 'app_category_index', methods: ['GET'])]
     public function index(CategoryRepository $categoryRepository, PaginatorInterface $paginator, Request $request): Response
     {
-    $pagination = $paginator->paginate(
-        $categoryRepository->findAll(),       
-        $request->query->getInt('page', 1),   
-        7                                 
+    $page = $request->query->getInt('page', 1);
+
+    $queryBuilder = $categoryRepository->createQueryBuilder('c')
+        ->where('c.deletedAt IS NULL')
+        ->orderBy('c.name', 'ASC');
+
+    $categories = $paginator->paginate(
+        $queryBuilder,
+        $page,
+        10
     );
 
     return $this->render('category/index.html.twig', [
-        'categories' => $pagination,
+        'categories' => $categories,
     ]);
     }
 
@@ -75,11 +81,11 @@ final class CategoryController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_category_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_category_delete', methods: ['POST'])]
     public function delete(Request $request, Category $category, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($category);
+            $category->setDeletedAt(new \DateTimeImmutable());
             $entityManager->flush();
         }
 

@@ -17,9 +17,13 @@ final class CommentController extends AbstractController
 {
     #[Route(name: 'app_comment_index', methods: ['GET'])]
     public function index(CommentRepository $commentRepository, PaginatorInterface $paginator, Request $request): Response
-{
+    {
+    $query = $commentRepository->createQueryBuilder('c')
+        ->where('c.deletedAt IS NULL')
+        ->orderBy('c.createdAt', 'DESC'); 
+
     $pagination = $paginator->paginate(
-        $commentRepository->findAll(),        
+        $query,        
         $request->query->getInt('page', 1),   
         7                                
     );
@@ -27,7 +31,8 @@ final class CommentController extends AbstractController
     return $this->render('comment/index.html.twig', [
         'comments' => $pagination,
     ]);
-}
+    }
+
 
     #[Route('/new', name: 'app_comment_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -75,14 +80,14 @@ final class CommentController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_comment_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_comment_delete', methods: ['POST'])]
     public function delete(Request $request, Comment $comment, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $comment->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($comment);
+            $comment->setDeletedAt(new \DateTimeImmutable());
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_comment_contoller_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_comment_index', [], Response::HTTP_SEE_OTHER);
     }
 }

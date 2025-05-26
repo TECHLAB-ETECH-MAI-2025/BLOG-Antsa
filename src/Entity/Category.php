@@ -25,6 +25,9 @@ class Category
     #[ORM\Column]
     private ?\DateTime $createdAt = null;
 
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $deletedAt = null;
+
     /**
      * @var Collection<int, Article>
      */
@@ -75,6 +78,17 @@ class Category
     {
         $this->createdAt = $createdAt;
 
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
         return $this;
     }
 

@@ -2,4 +2,5 @@
       onsubmit="return confirm('Sûr de vouloir supprimer cette catégorie ?');" 
       style="display: inline-block;">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+    <button class="btn btn-sm btn-danger">Supprimer</button>
 </form>

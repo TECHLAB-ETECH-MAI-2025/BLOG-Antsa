@@ -22,8 +22,12 @@ final class ArticleController extends AbstractController
 {
     $page = $request->query->getInt('page', 1);
 
+    $queryBuilder = $articleRepository->createQueryBuilder('a')
+        ->where('a.deletedAt IS NULL') 
+        ->orderBy('a.createdAt', 'DESC'); 
+
     $articles = $paginator->paginate(
-        $articleRepository->createQueryBuilder('a'),
+        $queryBuilder,
         $page,
         7
     );
@@ -31,7 +35,8 @@ final class ArticleController extends AbstractController
     return $this->render('article/index.html.twig', [
         'articles' => $articles,
     ]);
-}
+    }
+
 
     #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -107,7 +112,7 @@ final class ArticleController extends AbstractController
     public function delete(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($article);
+            $article->setDeletedAt(new \DateTimeImmutable());
             $entityManager->flush();
         }
 
