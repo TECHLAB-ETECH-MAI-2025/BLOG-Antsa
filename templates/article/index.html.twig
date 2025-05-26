@@ -45,9 +45,7 @@
                                 <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-sm btn-outline-secondary">
                                     Modifier
                                 </a>
-                                <a href="{{ path('app_article_delete', {'id': article.id}) }}" class="btn btn-sm btn-outline-danger">
-                                    Supprimer
-                                </a>
+                                {% include 'article/_delete_form.html.twig' with {'article': article} %}
                             </td>
                         </tr>
                     {% else %}
