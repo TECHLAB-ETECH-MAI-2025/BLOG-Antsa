@@ -3,7 +3,6 @@
       onsubmit="return confirm(' Sûr de vouloir supprimer cet article ?');"
       style="display:inline;">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
-   <button class="btn btn-sm btn-outline-danger">
-    <i class="bi bi-corbeil"> </i>
-   </button>
+    <i class="bi bi-trash"> </i>
+    Supprimer
 </form>
