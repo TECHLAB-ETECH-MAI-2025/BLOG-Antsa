@@ -3,10 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Article;
-use App\Entity\Comment;
 use App\Form\ArticleForm;
-use App\Form\CommentForm;
 use App\Repository\ArticleRepository;
+use App\Repository\ArticleLikeRepository as RepositoryArticleLikeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,85 +37,73 @@ final class ArticleController extends AbstractController
     }
 
 
-    #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $article = new Article();
-        $form = $this->createForm(ArticleForm::class, $article);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($article);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Article créé avec succès');
-		    return $this->redirectToRoute('app_article_index');
-        }
-
-        return $this->render('article/new.html.twig', [
-            'article' => $article,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_article_show', methods: ['GET', 'POST'])]
-    public function show(Article $article, Request $request, EntityManagerInterface $entityManager): Response
+		#[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
+		public function new(Request $request, EntityManagerInterface $entityManager): Response
 		{
-			$comment = new Comment();
-			$comment->setArticle($article);
-
-			$form = $this->createForm(CommentForm::class, $comment);
+			$article = new Article();
+			$form = $this->createForm(ArticleForm::class, $article);
 			$form->handleRequest($request);
 
 			if ($form->isSubmitted() && $form->isValid()) {
-				$comment->setCreatedAt(new \DateTimeImmutable());
-
-				$entityManager->persist($comment);
+				$article->setCreatedAt(new \DateTime());
+				$entityManager->persist($article);
 				$entityManager->flush();
 
-				$this->addFlash('success', 'Votre commentaire a été publié avec succès !');
-
-				return $this->redirectToRoute(
-					'app_article_show',
-					['id' => $article->getId()],
-					Response::HTTP_SEE_OTHER
-				);
+				$this->addFlash('success', 'L\'article a été créé avec succès.');
+				return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
 			}
 
-			return $this->render('article/show.html.twig', [
+			return $this->render('article/new.html.twig', [
 				'article' => $article,
-				'commentForm' => $form->createView(),
+				'form' => $form,
 			]);
 		}
 
-    #[Route('/{id}/edit', name: 'app_article_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Article $article, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(ArticleForm::class, $article);
-        $form->handleRequest($request);
+		#[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
+		public function show(Article $article, Request $request, RepositoryArticleLikeRepository $likeRepository): Response
+		{
+			// Vérifier si l'utilisateur a déjà aimé cet article
+			$ipAddress = $request->getClientIp();
+			$isLiked = $likeRepository->findOneBy([
+				'article' => $article,
+				'ipAddress' => $ipAddress
+			]) !== null;
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+			return $this->render('article/show.html.twig', [
+				'article' => $article,
+				'is_liked' => $isLiked
+			]);
+		}
 
-            $this->addFlash('success', 'Article modifié avec succès');
-		    return $this->redirectToRoute('app_article_index');
-        }
+		#[Route('/{id}/edit', name: 'app_article_edit', methods: ['GET', 'POST'])]
+		public function edit(Request $request, Article $article, EntityManagerInterface $entityManager): Response
+		{
+			$form = $this->createForm(ArticleForm::class, $article);
+			$form->handleRequest($request);
 
-        return $this->render('article/edit.html.twig', [
-            'article' => $article,
-            'form' => $form,
-        ]);
+			if ($form->isSubmitted() && $form->isValid()) {
+				$entityManager->flush();
+
+				$this->addFlash('success', 'L\'article a été modifié avec succès.');
+				return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+			}
+
+			return $this->render('article/edit.html.twig', [
+				'article' => $article,
+				'form' => $form,
+			]);
+		}
+
+		#[Route('/{id}', name: 'app_article_delete', methods: ['POST'])]
+		public function delete(Request $request, Article $article, EntityManagerInterface $entityManager): Response
+		{
+			if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {
+				$entityManager->remove($article);
+				$entityManager->flush();
+				$this->addFlash('success', 'L\'article a été supprimé avec succès.');
+			}
+
+			return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+		}
+	
     }
-
-    #[Route('/{id}/delete', name: 'app_article_delete', methods: ['POST'])]
-    public function delete(Request $request, Article $article, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->getPayload()->getString('_token'))) {
-            $article->setDeletedAt(new \DateTimeImmutable());
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
-    }
-    
-}
