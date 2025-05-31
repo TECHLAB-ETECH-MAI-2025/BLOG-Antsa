@@ -12,7 +12,7 @@
 		}
 
 		&.liked {
-			color: #e74c3c;
+			color: hsl(306, 92%, 64%);
 		}
 	}
 
@@ -28,6 +28,24 @@
 		border-right-color: transparent;
 		border-radius: 50%;
 		animation: spinner-border .75s linear infinite;
+	}
+
+	.dataTables_processing {
+  		position: absolute;
+  		top: 50%;
+  		left: 50%;
+  		width: auto;
+  		margin-left: -75px; /* Ajuste selon la taille de ton message */
+  		margin-top: -15px;
+  		z-index: 10;
+  		background: rgba(255, 255, 255, 0.8);
+  		padding: 10px 20px;
+  		border-radius: 5px;
+  		font-weight: bold;
+	}
+
+	.dataTables_wrapper {
+  		position: relative;
 	}
 
 	.search-container {

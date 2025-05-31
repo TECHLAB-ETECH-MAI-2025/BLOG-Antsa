@@ -4,8 +4,7 @@
 
 {% block body %}
     <h2>Ajouter un nouveau article </h2>
-{{ include('article/_form.html.twig', { button_label: 'Save' }) }}
-
+{{ include('article/_form.html.twig', { 'form': form, 'button_label': 'Save' }) }}
 
 <div class="d-flex gap-2 mt-3">
     <a href="{{ path('app_article_index') }}" class="btn btn-secondary mt-3">

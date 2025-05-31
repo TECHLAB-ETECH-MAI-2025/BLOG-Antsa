@@ -16,28 +16,65 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
-    //    /**
-    //     * @return Article[] Returns an array of Article objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('a.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Récupération des articles pour un tableau dynamique (DataTable)
+     */
+    public function findForDatatable(
+    int $start,
+    int $length,
+    array $search,
+    string $orderColumn,
+    string $orderDir
+): array {
+    $qb = $this->createQueryBuilder('a');
 
-    //    public function findOneBySomeField($value): ?Article
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    if (!empty($search['value'])) {
+        $qb->andWhere('a.title LIKE :search')
+           ->setParameter('search', '%' . $search['value'] . '%');
+    }
+
+    $totalCount = $this->count([]);
+
+    $filteredCount = (clone $qb)
+        ->select('COUNT(a.id)')
+        ->getQuery()
+        ->getSingleScalarResult();
+
+    // Sécurité colonne triée
+    $allowedColumns = ['id', 'title', 'createdAt'];
+    if (!in_array($orderColumn, $allowedColumns)) {
+        $orderColumn = 'id';
+    }
+
+    $orderDir = strtoupper($orderDir) === 'ASC' ? 'ASC' : 'DESC';
+
+    $qb->orderBy('a.' . $orderColumn, $orderDir)
+       ->setFirstResult($start)
+       ->setMaxResults($length);
+
+    $data = $qb->getQuery()->getResult();
+
+    return [
+        'data' => $data,
+        'totalCount' => (int) $totalCount,
+        'filteredCount' => (int) $filteredCount,
+    ];
+}
+
+
+
+    /**
+     * Recherche des articles par titre
+     */
+    public function searchByTitle(string $query, int $limit = 10): array
+    {
+        return $this->createQueryBuilder('a')
+            ->leftJoin('a.categories', 'c')
+            ->where('a.title LIKE :query')
+            ->setParameter('query', '%' . $query . '%')
+            ->orderBy('a.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -2,6 +2,7 @@ import $ from 'jquery';
 	import 'datatables.net';
 	import 'datatables.net-bs5';
 	import 'datatables.net-responsive-bs5';
+//	import './styles/article/index.css';
 
 	$(document).ready(function() {
 		// Initialisation de DataTables
@@ -10,8 +11,11 @@ import $ from 'jquery';
 			serverSide: true,
 			responsive: true,
 			ajax: {
-				url: '/api/articles',
-				type: 'POST'
+				url: '/api/article/datatable',
+				type: 'POST',
+				data: function(d) {
+            		return d; 
+        }
 			},
 			columns: [
 				{ data: 'id' },
