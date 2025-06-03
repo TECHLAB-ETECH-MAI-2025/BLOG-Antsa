@@ -46,6 +46,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $isVerified = null;
 
+    public function __construct()
+    {
+    $this->createdAt = new \DateTimeImmutable();
+    $this->roles = ['ROLE_USER'];
+	$this->isVerified = false;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -166,4 +173,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    public function getFullName(): string
+		{
+			if ($this->firstName && $this->lastName) {
+				return $this->firstName . ' ' . $this->lastName;
+			}
+
+			return $this->email;
+		}
 }
