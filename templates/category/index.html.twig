@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Category index{% endblock %}
+
+{% block body %}
+    <h1>Liste des catégoties</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for category in categories %}
+            <tr>
+                <td>{{ category.id }}</td>
+                <td>{{ category.title }}</td>
+                <td>{{ category.description }}</td>
+                <td>{{ category.createdAt ? category.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_category_show', {'id': category.id}) }}" class="btn btn-sm btn-info">Voir</a>
+                    <a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
+                    {% include 'category/_delete_form.html.twig' with {'category': category} %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5" class="text-center">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_category_new') }}" class="btn btn-success mt-3">Ajouter</a>
+    
+    <div class="d-flex justify-content-center mt-4">
+    {{ knp_pagination_render(categories) }}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,5 @@
+{{ form_start(form) }}
+    {{ form_row(form.author) }}<br>
+    {{ form_row(form.content) }}<br>
+    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}
