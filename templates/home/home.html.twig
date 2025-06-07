@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+<div class="text-center mb-5">
+    <h1 class="display-3 fw-bold" style="color: #6f42c1;">Bienvenue sur Mon Blog</h1>
+    <p class="lead" style="color: #d63384;">Explorez des articles inspirants, techniques et créatifs.</p>
+    <a href="{{ path('app_article_index') }}" class="btn btn-lg btn-primary mt-3" style="background-color: #6f42c1; border-color: #6f42c1;">Découvrir les articles</a>
+</div>
+
+<div class="row text-center">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow border-0">
+            <div class="card-body">
+                <i class="bi bi-book-half display-4" style="color: #6f42c1;"></i>
+                <h5 class="card-title mt-3">Lectures</h5>
+                <p class="card-text">Plongez dans nos articles récents et enrichissants.</p>
+                <a href="{{ path('app_article_index') }}" class="btn btn-outline-primary">Lire</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card shadow border-0">
+            <div class="card-body">
+                <i class="bi bi-tags display-4" style="color: #d63384;"></i>
+                <h5 class="card-title mt-3">Catégories</h5>
+                <p class="card-text">Explorez nos différentes catégories d’articles.</p>
+                <a href="{{ path('app_category_index') }}" class="btn btn-outline-danger">Explorer</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card shadow border-0">
+            <div class="card-body">
+                <i class="bi bi-chat-dots display-4" style="color: #6f42c1;"></i>
+                <h5 class="card-title mt-3">Commentaires</h5>
+                <p class="card-text">Partagez vos idées, impressions et retours.</p>
+                <a href="{{ path('app_comment_index') }}" class="btn btn-outline-secondary">Voir</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

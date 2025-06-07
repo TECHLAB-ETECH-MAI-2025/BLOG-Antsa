@@ -20,7 +20,7 @@ security:
                 - App\Security\LoginFormAuthenticator
             logout: 
                 path: app_logout
-                target: app_home
+              #  target: app_home
             
             remember_me:
                 secret: '%kernel.secret%'
@@ -43,6 +43,9 @@ security:
          - { path: ^/register, roles: PUBLIC_ACCESS}
          - { path: ^/reset-password, roles: PUBLIC_ACCESS }
          - { path: ^/verify/email, roles: PUBLIC_ACCESS }
+         - { path: ^/home, roles: PUBLIC_ACCESS }
+         - { path: ^/$, roles: PUBLIC_ACCESS } 
+         - { path: ^/, roles: ROLE_USER }  
 
 
 when@test:
