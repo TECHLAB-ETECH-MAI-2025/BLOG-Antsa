@@ -17,10 +17,10 @@
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
-    <form method="post">
+    <form method="post" action="{{ path('app_login') }}">
         <div>
-            <label for="username">Email</label>
-            <input type="text" id="username" name="_username" value="{{ last_username }}" required autofocus>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="_email" required autofocus>
         </div>
         <div>
             <label for="password">Mot de passe</label>
@@ -33,4 +33,3 @@
         <button type="submit">Se connecter</button>
     </form>
 {% endblock %}
-
