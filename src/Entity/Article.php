@@ -37,7 +37,7 @@ class Article
     /**
      * @var Collection<int, ArticleLike>
      */
-    #[ORM\OneToMany(targetEntity: ArticleLike::class, mappedBy: 'article')]
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: ArticleLike::class, cascade: ['remove'])]
     private Collection $likes;
 
     public function __construct()
@@ -181,6 +181,11 @@ class Article
         }
 
         return $this;
+    }
+
+    public function isLikedBy(User $user): bool
+    {
+        return $this->likes->contains($user);
     }
 
     public function getLikesCount(): int{

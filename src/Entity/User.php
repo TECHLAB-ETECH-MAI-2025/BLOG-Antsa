@@ -3,10 +3,17 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+
+// #[ORM\Table(name: '`user`', uniqueConstraints: [
+//     new ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', columns: ['email'])
+// ])]
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -46,9 +53,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $isVerified = null;
 
+    /** @var Collection<int,Comment> */
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Comment::class, orphanRemoval: true)]
+    private Collection $comments;
+
     public function __construct()
     {
     $this->createdAt = new \DateTimeImmutable();
+    $this->comments = new ArrayCollection();
     $this->roles = ['ROLE_USER'];
 	$this->isVerified = false;
     }
@@ -174,11 +186,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
     public function getFullName(): string
-		{
+	{
 			if ($this->firstName && $this->lastName) {
 				return $this->firstName . ' ' . $this->lastName;
 			}
 
 			return $this->email;
-		}
+	}
+
+     /** @return Collection<int,Comment> */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setAuthor($this);
+        }
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            if ($comment->getAuthor() === $this) {
+                $comment->setAuthor($this);
+            }
+        }
+        return $this;
+    }
 }

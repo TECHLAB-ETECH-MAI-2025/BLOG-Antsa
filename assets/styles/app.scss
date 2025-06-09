@@ -76,7 +76,8 @@
 				cursor: pointer;
 
 				&:hover {
-					background-color: #f8f9fa;
+					background: linear-gradient(90deg,#6f42c1,#d63384);
+  					color:#fff;
 				}
 
 				&:last-child {
