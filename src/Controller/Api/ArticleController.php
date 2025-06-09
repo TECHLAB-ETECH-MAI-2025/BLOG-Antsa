@@ -52,6 +52,7 @@ class ArticleController extends AbstractController
         $count = $this->articleRepo->toggleLike($this->getUser(), $article);
 
         return $this->json([
+            'success'    => true,
             'liked'      => $article->isLikedBy($this->getUser()),
             'likesCount' => $count,
         ]);

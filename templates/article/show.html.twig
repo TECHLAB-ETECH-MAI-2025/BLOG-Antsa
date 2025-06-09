@@ -25,9 +25,9 @@
         </div>
 
         <div class="card-footer d-flex justify-content-between align-items-center">
-            <button class="btn btn-outline-danger btn-sm like-btn" data-id="{{ article.id }}">
-                <i class="bi bi-heart-fill"></i>
-                <span class="like-count">{{ article.likes|length }}</span>
+            <button class="btn btn-sm like-btn {{ article.isLikedBy(app.user) ? 'btn-danger' : 'btn-outline-danger' }}" data-id="{{ article.id }}">
+            <i class="bi {{ article.isLikedBy(app.user) ? 'bi-heart-fill text-danger' : 'bi-heart' }}"></i>
+            <span class="like-count">{{ article.likes|length }}</span>
             </button>
 
             <a href="#commentaires" class="btn btn-outline-success btn-sm">

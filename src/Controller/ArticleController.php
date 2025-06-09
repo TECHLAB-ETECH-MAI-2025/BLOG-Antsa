@@ -75,7 +75,7 @@ final class ArticleController extends AbstractController
 			]);
 		}
 
-		#[Route('/{id}/edit', name: 'app_article_edit', methods: ['GET', 'POST'])]
+		#[Route('/{id}/edit', name: 'app_article_edit', methods: ['GET','POST'])]
 		public function edit(Request $request, Article $article, EntityManagerInterface $entityManager): Response
 		{
 			$form = $this->createForm(ArticleForm::class, $article);
@@ -94,16 +94,19 @@ final class ArticleController extends AbstractController
 			]);
 		}
 
-		#[Route('/{id}', name: 'app_article_delete', methods: ['POST'])]
+		#[Route('/{id}/delete', name: 'app_article_delete', methods: ['POST'])]
 		public function delete(Request $request, Article $article, EntityManagerInterface $entityManager): Response
 		{
-			if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {
-				$entityManager->remove($article);
-				$entityManager->flush();
-				$this->addFlash('success', 'L\'article a été supprimé avec succès.');
-			}
+    	if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {
+        $article->setDeletedAt(new \DateTimeImmutable());
 
-			return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
-		}
+        $entityManager->flush();
+
+        $this->addFlash('success', 'L\'article a été supprimé avec succès.');
+    	}
+
+    return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+	}
+
 	
     }

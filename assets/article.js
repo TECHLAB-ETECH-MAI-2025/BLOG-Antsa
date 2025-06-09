@@ -48,25 +48,42 @@ import $ from 'jquery';
 			});
 
 			// Système de "j'aime" en AJAX
-			const $likeButton = $('.like-button');
-			const articleId = $likeButton.data('article-id');
+			const csrfToken = $('meta[name="csrf-token-like"]').attr('content');
 
-			$likeButton.on('click', function() {
-				$.ajax({
-					url: `/article/${articleId}/like`,
-					method: 'POST',
-					dataType: 'json',
-					success: function(response) {
-						if (response.success) {
-							// Mettre à jour l'état du bouton
-							$likeButton.toggleClass('liked', response.liked);
+  			$(document).on('click', '.like-btn', function () {
+    		const $btn       = $(this);
+    		const articleId  = $btn.data('id');
 
-							// Mettre à jour le compteur de likes
-							$('#likes-count').text(response.likesCount);
-						}
-					}
-				});
-			});
+    		$.ajax({
+      			url: `/article/${articleId}/like`,
+      			method: 'POST',
+      			headers: {
+        		'X-Requested-With': 'XMLHttpRequest',
+        		'X-CSRF-TOKEN': csrfToken
+      			},
+      			dataType: 'json',
+      		success(response) {
+        			if (!response.success) return;
+
+        // 1.  Mettre à jour le compteur
+        		$btn.find('.like-count').text(response.likesCount);
+
+        // 2.  Mettre à jour l’icône & le style
+        		const $icon = $btn.find('i');
+        		if (response.liked) {
+          		$icon.removeClass('bi-heart').addClass('bi-heart-fill text-danger');
+          		$btn.removeClass('btn-outline-danger').addClass('btn-danger');
+        		} else {
+          		$icon.removeClass('bi-heart-fill text-danger').addClass('bi-heart');
+          		$btn.removeClass('btn-danger').addClass('btn-outline-danger');
+        		}
+      		},
+      error() {
+        // Affiche un toast ou une alerte Bootstrap si tu as showAlert()
+        showAlert?.('danger', 'Impossible de mettre à jour le like.');
+      }
+    });
+  });
 
 			// Fonction pour afficher des alertes
 			function showAlert(type, message) {
