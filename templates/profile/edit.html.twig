@@ -1,0 +1,68 @@
+{% set avatarUrl = "https://ui-avatars.com/api/?name=" ~ app.user.firstName ~ "+" ~ app.user.lastName ~ "&background=91467a&color=fff&size=128&rounded=true" %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil{% endblock %}
+
+{% block body %}
+<style>
+    body {
+        background: #f9f5fb;
+        color: #4b306a;
+        font-family: 'Arial', sans-serif;
+    }
+    .form-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(75, 48, 106, 0.15);
+        text-align: center;
+    }
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin-bottom: 1rem;
+    }
+    label {
+        font-weight: bold;
+        color:rgb(149, 14, 144);
+        text-align: left;
+        display: block;
+        margin-top: 1rem;
+    }
+    .btn-submit {
+        background:rgb(181, 10, 193);
+        border: none;
+        padding: 0.6rem 1.2rem;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 1rem;
+    }
+    .btn-submit:hover {
+        background:rgb(237, 8, 169);
+    }
+</style>
+
+<div class="form-container">
+    <img src="{{ avatarUrl }}" alt="Avatar" class="profile-avatar">
+    <h1>Modifier mon profil</h1>
+
+    {{ form_start(profileForm) }}
+        {{ form_row(profileForm.firstName) }}
+        {{ form_row(profileForm.lastName) }}
+        {{ form_row(profileForm.email) }}
+        {{ form_row(profileForm.plainPassword, {
+            'label': 'Nouveau mot de passe (laisser vide pour ne pas changer)'
+        }) }}
+
+        <button type="submit" class="btn-submit">Enregistrer</button>
+    {{ form_end(profileForm) }}
+
+    <a href="{{ path('app_profile') }}" style="display:block; margin-top:1rem; color:#91467a;">Retour au profil</a>
+</div>
+{% endblock %}
