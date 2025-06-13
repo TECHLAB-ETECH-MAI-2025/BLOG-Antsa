@@ -18,6 +18,8 @@
         "symfony/flex": "^2.7",
         "symfony/form": "7.2.*",
         "symfony/framework-bundle": "7.2.*",
+        "symfony/google-mailer": "7.2.*",
+        "symfony/http-client": "7.2.*",
         "symfony/mailer": "7.2.*",
         "symfony/runtime": "*",
         "symfony/security-bundle": "7.2.*",

@@ -1,11 +1,101 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Email envoyé - Réinitialisation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-{% block title %}Password Reset Email Sent{% endblock %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-{% block body %}
+    <style>
+        :root {
+            --violet: #6f42c1;
+            --rose: #d63384;
+            --light-bg: #f8f9fa;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--violet), var(--rose));
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .confirmation-card {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .confirmation-card h1 {
+            font-size: 1.7rem;
+            background: linear-gradient(135deg, var(--violet), var(--rose));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .confirmation-card p {
+            color: #333;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .retry-link {
+            color: var(--rose);
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .retry-link:hover {
+            text-decoration: underline;
+        }
+
+        .icon-check {
+            font-size: 3rem;
+            color: var(--rose);
+            margin-bottom: 1rem;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="confirmation-card">
+    <div class="icon-check">📬</div>
+    <h1>Email envoyé !</h1>
+
     <p>
-        If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.
-        This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+        Si un compte correspond à votre adresse e-mail, un message contenant un lien de réinitialisation vient d’être envoyé.
+        Ce lien expirera dans :
+        <strong>
+            {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}
+        </strong>.
     </p>
-    <p>If you don't receive an email please check your spam folder or <a href="{{ path('app_forgot_password_request') }}">try again</a>.</p>
-{% endblock %}
+
+    <p>
+        Vous ne voyez rien ? Vérifiez votre dossier indésirables (spam) ou
+        <a class="retry-link" href="{{ path('app_forgot_password_request') }}">réessayez ici</a>.
+    </p>
+</div>
+
+</body>
+</html>
