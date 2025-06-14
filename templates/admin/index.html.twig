@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="mb-4 text-primary fw-bold">Administration Dashboard</h1>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="{{ path('app_admin') }}" class="list-group-item list-group-item-action">Tableau de bord</a>
+                <a href="{{ path('admin_user_index') }}" class="list-group-item list-group-item-action">Gestion des utilisateurs</a>
+                <a href="{{ path('app_home') }}" class="list-group-item list-group-item-action text-danger">Retour au site</a>
+            </div>
+        </div>
+
+
+
+
+        <div class="col-md-9">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0 rounded-4 bg-gradient-pink text-white p-4">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-person fs-1 me-3"></i>
+                            <div>
+                                <h5 class="card-title mb-1">Utilisateurs</h5>
+                                <p class="fs-2 fw-bold">{{ userCount }}</p>
+                            </div>
+                        </div>
+                        <a href="{{ path('admin_user_index') }}" class="btn btn-light btn-sm mt-3">Voir</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0 rounded-4 bg-gradient-success text-white p-4">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-person-check fs-1 me-3"></i>
+                            <div>
+                                <h5 class="card-title mb-1">Utilisateurs vérifiés</h5>
+                                <p class="fs-2 fw-bold">{{ verifiedCount }}</p>
+                            </div>
+                        </div>
+                        <a href="{{ path('admin_user_index') }}" class="btn btn-light btn-sm mt-3">Voir</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0 rounded-4 bg-gradient-warning text-white p-4">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-shield-lock fs-1 me-3"></i>
+                            <div>
+                                <h5 class="card-title mb-1">Administrateurs</h5>
+                                <p class="fs-2 fw-bold">{{ adminCount }}</p>
+                            </div>
+                        </div>
+                        <a href="{{ path('admin_user_index') }}" class="btn btn-light btn-sm mt-3">Voir</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5 d-flex justify-content-end">
+                <a href="{{ path('admin_user_new') }}" class="btn btn-primary btn-lg shadow-sm">
+                    <i class="bi bi-plus-circle me-2"></i> Créer
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-gradient-pink {
+        background: linear-gradient(45deg, #ff69b4, #ff1493);
+    }
+    .bg-gradient-success {
+        background: linear-gradient(45deg,rgb(212, 16, 238),rgb(93, 29, 94));
+    }
+    .bg-gradient-warning {
+        background: linear-gradient(45deg,rgb(58, 176, 244),rgb(31, 41, 101));
+    }
+</style>
+{% endblock %}

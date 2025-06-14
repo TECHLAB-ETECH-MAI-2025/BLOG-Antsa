@@ -33,6 +33,58 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    public function countUsersByRole(string $role): int
+    {
+    $connection = $this->getEntityManager()->getConnection();
+
+    $sql = 'SELECT COUNT(*) FROM "user" WHERE roles::text LIKE :role';
+    $stmt = $connection->prepare($sql);
+    $stmt->bindValue('role', '%"'.$role.'"%');
+    $result = $stmt->executeQuery();
+
+    return (int) $result->fetchOne();
+    }
+    public function countUsersByIsVerified(bool $isVerified): int
+    {
+    return (int) $this->createQueryBuilder('u')
+        ->select('COUNT(u.id)')
+        ->where('u.isVerified = :isVerified')
+        ->setParameter('isVerified', $isVerified)
+        ->getQuery()
+        ->getSingleScalarResult();
+    }
+
+    public function findAllUsers(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->orderBy('u.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAdmins(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('JSON_CONTAINS(u.roles, :roleAdmin) = 1 OR JSON_CONTAINS(u.roles, :roleSuperAdmin) = 1')
+            ->setParameter('roleAdmin', json_encode('ROLE_ADMIN'))
+            ->setParameter('roleSuperAdmin', json_encode('ROLE_SUPER_ADMIN'))
+            ->orderBy('u.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    
+    public function findVerifiedUsers(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.isVerified = :verified')
+            ->setParameter('verified', true)
+            ->orderBy('u.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+}
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */
@@ -57,4 +109,4 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     //            ->getOneOrNullResult()
     //        ;
     //    }
-}
+

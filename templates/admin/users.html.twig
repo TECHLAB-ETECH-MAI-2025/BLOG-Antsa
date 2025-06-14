@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des utilisateurs{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="mb-4 text-primary fw-bold">Gestion des utilisateurs</h1>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="{{ path('app_admin') }}" class="list-group-item list-group-item-action">Tableau de bord</a>
+                <a href="{{ path('admin_user_index') }}" class="list-group-item list-group-item-action active">Gestion des utilisateurs</a>
+                <a href="{{ path('app_home') }}" class="list-group-item list-group-item-action text-danger">Retour au site</a>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            <div class="d-flex justify-content-end mb-3">
+                <a href="{{ path('admin_user_new') }}" class="btn btn-success">Nouvel utilisateur</a>
+            </div>
+
+            {% if users is not empty %}
+                <table class="table table-hover table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Email</th>
+                            <th>Rôles</th>
+                            <th>Vérifié</th>
+                            <th>Date d'inscription</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.fullName }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    {% for role in user.roles %}
+                                        {% if role == 'ROLE_ADMIN' %}
+                                            Admin
+                                        {% elseif role == 'ROLE_SUPER_ADMIN' %}
+                                            Super Admin
+                                        {% elseif role == 'ROLE_USER' %}
+                                            Utilisateur
+                                        {% else %}
+                                            {{ role }}
+                                        {% endif %}
+                                        {% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>{{ user.isVerified ? 'Oui' : 'Non' }}</td>
+                                <td>{{ user.createdAt|date('d/m/Y') }}</td>
+                                <td>
+                                    <a href="{{ path('admin_user_edit', {id: user.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
+                                    <a href="{{ path('admin_user_delete', {id: user.id}) }}"
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Supprimer {{ user.fullName }} ({{ user.email }}) ?');">
+                                       Supprimer
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="alert alert-info">Aucun utilisateur trouvé.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<a href="{{ path('app_admin') }}" class="btn btn-secondary">Retour</a>
+                    
+{% endblock %}
